@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <rect width="128" height="128" rx="28" fill="#0f172a"/>
+  <g transform="translate(16, 28)">
+    <!-- Container body -->
+    <rect x="8" y="24" width="80" height="48" rx="6" fill="#2563eb" opacity="0.9"/>
+    <!-- Container rows -->
+    <rect x="14" y="30" width="28" height="10" rx="2" fill="#60a5fa"/>
+    <rect x="46" y="30" width="28" height="10" rx="2" fill="#60a5fa"/>
+    <rect x="14" y="44" width="28" height="10" rx="2" fill="#60a5fa"/>
+    <rect x="46" y="44" width="28" height="10" rx="2" fill="#60a5fa"/>
+    <rect x="14" y="58" width="28" height="10" rx="2" fill="#60a5fa"/>
+    <rect x="46" y="58" width="28" height="10" rx="2" fill="#60a5fa"/>
+    <!-- Whale spout -->
+    <rect x="34" y="8" width="4" height="12" rx="2" fill="#38bdf8"/>
+    <rect x="42" y="4" width="4" height="16" rx="2" fill="#38bdf8"/>
+    <rect x="50" y="10" width="4" height="10" rx="2" fill="#38bdf8"/>
+    <!-- Play button overlay -->
+    <polygon points="72,52 88,62 72,72" fill="white" opacity="0.85"/>
+  </g>
+</svg>
