@@ -1,0 +1,167 @@
+{
+  "name": "docker-quick-actions",
+  "displayName": "Docker Quick Actions",
+  "description": "Manage Docker containers directly from VSCode",
+  "version": "0.0.1",
+  "publisher": "tamby",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:dockerContainers"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "docker-quick-actions",
+          "title": "Docker Quick Actions",
+          "icon": "$(package)"
+        }
+      ]
+    },
+    "views": {
+      "docker-quick-actions": [
+        {
+          "id": "dockerContainers",
+          "name": "Containers",
+          "icon": "$(package)",
+          "contextualTitle": "Docker Containers"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "docker-quick-actions.refreshContainers",
+        "title": "Refresh Containers",
+        "icon": "$(refresh)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.startContainer",
+        "title": "Start Container",
+        "icon": "$(play)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.stopContainer",
+        "title": "Stop Container",
+        "icon": "$(debug-stop)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.restartContainer",
+        "title": "Restart Container",
+        "icon": "$(debug-restart)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.removeContainer",
+        "title": "Remove Container",
+        "icon": "$(trash)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.viewLogs",
+        "title": "View Logs",
+        "icon": "$(output)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.execBash",
+        "title": "Exec Bash",
+        "icon": "$(terminal)",
+        "category": "Docker"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "docker-quick-actions.refreshContainers",
+          "when": "view == dockerContainers",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "docker-quick-actions.execBash",
+          "when": "view == dockerContainers && viewItem == running",
+          "group": "inline@1"
+        },
+        {
+          "command": "docker-quick-actions.viewLogs",
+          "when": "view == dockerContainers && viewItem == running",
+          "group": "inline@2"
+        },
+        {
+          "command": "docker-quick-actions.stopContainer",
+          "when": "view == dockerContainers && viewItem == running",
+          "group": "inline@3"
+        },
+        {
+          "command": "docker-quick-actions.startContainer",
+          "when": "view == dockerContainers && viewItem == stopped",
+          "group": "inline@1"
+        },
+        {
+          "command": "docker-quick-actions.removeContainer",
+          "when": "view == dockerContainers && viewItem == stopped",
+          "group": "inline@2"
+        },
+        {
+          "command": "docker-quick-actions.restartContainer",
+          "when": "view == dockerContainers && viewItem == running",
+          "group": "1_actions"
+        },
+        {
+          "command": "docker-quick-actions.removeContainer",
+          "when": "view == dockerContainers && viewItem == stopped",
+          "group": "2_danger"
+        },
+        {
+          "command": "docker-quick-actions.viewLogs",
+          "when": "view == dockerContainers",
+          "group": "3_info"
+        },
+        {
+          "command": "docker-quick-actions.execBash",
+          "when": "view == dockerContainers && viewItem == running",
+          "group": "3_info"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "docker-quick-actions.refreshContainers",
+        "key": "ctrl+shift+d r",
+        "mac": "cmd+shift+d r"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/dockerode": "^3.3.23",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^2.22.0",
+    "mocha": "^11.7.5",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "dockerode": "^4.0.0"
+  }
+}
