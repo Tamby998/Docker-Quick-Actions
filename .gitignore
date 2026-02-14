@@ -3,4 +3,3 @@ out/
 dist/
 .next/
 *.vsix
-monitor.sh
