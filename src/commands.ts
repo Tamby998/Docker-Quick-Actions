@@ -2,11 +2,15 @@ import * as vscode from 'vscode';
 import { DockerManager } from './dockerManager';
 import { ContainerTreeProvider, ContainerTreeItem } from './treeView';
 import { LogsPanel } from './logsPanel';
+import { StatsCollector } from './statsCollector';
+import { StatsPanel } from './statsPanel';
+import { formatStatsForExport } from './statsFormatter';
 
 export function registerCommands(
     context: vscode.ExtensionContext,
     dockerManager: DockerManager,
-    treeProvider: ContainerTreeProvider
+    treeProvider: ContainerTreeProvider,
+    statsCollector: StatsCollector
 ): void {
     context.subscriptions.push(
         vscode.commands.registerCommand('docker-quick-actions.refreshContainers', () => {
@@ -110,6 +114,50 @@ export function registerCommands(
                 shellArgs: ['exec', '-it', container.id, '/bin/sh']
             });
             terminal.show();
+        })
+    );
+
+    // New stats commands
+    context.subscriptions.push(
+        vscode.commands.registerCommand('docker-quick-actions.showResourcesMonitor', () => {
+            StatsPanel.show(statsCollector);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('docker-quick-actions.toggleStatsInTreeView', () => {
+            const enabled = treeProvider.toggleStats();
+            vscode.window.showInformationMessage(`Stats in TreeView: ${enabled ? 'ON' : 'OFF'}`);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('docker-quick-actions.exportStatsReport', async () => {
+            const allStats = statsCollector.getAllStats();
+            if (allStats.size === 0) {
+                vscode.window.showInformationMessage('No stats data available to export.');
+                return;
+            }
+
+            const format = await vscode.window.showQuickPick(
+                [{ label: 'CSV', value: 'csv' }, { label: 'JSON', value: 'json' }],
+                { placeHolder: 'Select export format' }
+            );
+            if (!format) { return; }
+
+            const statsArray = Array.from(allStats.values());
+            const exported = formatStatsForExport(statsArray);
+            const content = format.label === 'CSV' ? exported.csv : exported.json;
+            const ext = format.label === 'CSV' ? 'csv' : 'json';
+
+            const uri = await vscode.window.showSaveDialog({
+                defaultUri: vscode.Uri.file(`docker-stats.${ext}`),
+                filters: { [format.label]: [ext] }
+            });
+            if (!uri) { return; }
+
+            await vscode.workspace.fs.writeFile(uri, Buffer.from(content, 'utf8'));
+            vscode.window.showInformationMessage(`Stats exported to ${uri.fsPath}`);
         })
     );
 }

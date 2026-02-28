@@ -10,9 +10,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onView:dockerContainers"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -76,12 +73,40 @@
         "title": "Exec Bash",
         "icon": "$(terminal)",
         "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.showResourcesMonitor",
+        "title": "Show Resources Monitor",
+        "icon": "$(graph)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.toggleStatsInTreeView",
+        "title": "Toggle Stats in TreeView",
+        "icon": "$(pulse)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.exportStatsReport",
+        "title": "Export Stats Report",
+        "icon": "$(export)",
+        "category": "Docker"
       }
     ],
     "menus": {
       "view/title": [
         {
           "command": "docker-quick-actions.refreshContainers",
+          "when": "view == dockerContainers",
+          "group": "navigation"
+        },
+        {
+          "command": "docker-quick-actions.toggleStatsInTreeView",
+          "when": "view == dockerContainers",
+          "group": "navigation"
+        },
+        {
+          "command": "docker-quick-actions.showResourcesMonitor",
           "when": "view == dockerContainers",
           "group": "navigation"
         }
@@ -131,16 +156,72 @@
           "command": "docker-quick-actions.execBash",
           "when": "view == dockerContainers && viewItem == running",
           "group": "3_info"
+        },
+        {
+          "command": "docker-quick-actions.toggleStatsInTreeView",
+          "when": "view == dockerContainers",
+          "group": "4_stats"
+        },
+        {
+          "command": "docker-quick-actions.showResourcesMonitor",
+          "when": "view == dockerContainers",
+          "group": "4_stats"
         }
       ]
     },
     "keybindings": [
       {
         "command": "docker-quick-actions.refreshContainers",
-        "key": "ctrl+shift+d r",
-        "mac": "cmd+shift+d r"
+        "key": "ctrl+shift+alt+r",
+        "mac": "ctrl+shift+alt+r"
+      },
+      {
+        "command": "docker-quick-actions.showResourcesMonitor",
+        "key": "ctrl+shift+alt+m",
+        "mac": "ctrl+shift+alt+m"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Docker Quick Actions",
+      "properties": {
+        "dockerQuickActions.stats.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable container resource stats collection"
+        },
+        "dockerQuickActions.stats.refreshInterval": {
+          "type": "number",
+          "default": 2,
+          "minimum": 1,
+          "maximum": 30,
+          "description": "Stats refresh interval in seconds"
+        },
+        "dockerQuickActions.stats.showInTreeView": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline stats (CPU/RAM) in the TreeView"
+        },
+        "dockerQuickActions.alerts.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable resource usage alerts"
+        },
+        "dockerQuickActions.alerts.cpuThreshold": {
+          "type": "number",
+          "default": 80,
+          "minimum": 10,
+          "maximum": 100,
+          "description": "CPU usage threshold (%) to trigger alerts"
+        },
+        "dockerQuickActions.alerts.memoryThreshold": {
+          "type": "number",
+          "default": 90,
+          "minimum": 10,
+          "maximum": 100,
+          "description": "Memory usage threshold (%) to trigger alerts"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
