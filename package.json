@@ -227,6 +227,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "dev": "npm run compile && cursor --extensionDevelopmentPath=.",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package"

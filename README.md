@@ -29,12 +29,26 @@ Extension VSCode pour gérer les containers Docker directement depuis l'éditeur
 ## Installation
 
 ```bash
-# Depuis les sources
 npm install
-npm run compile
 ```
 
-Puis `F5` dans VSCode pour lancer en mode développement.
+## Développement
+
+**Option 1 — Lancement direct** (recommandé)
+```bash
+npm run dev
+```
+Compile et ouvre automatiquement une fenêtre Cursor avec l'extension chargée.
+
+**Option 2 — Mode watch** (rechargement automatique à chaque sauvegarde)
+```bash
+npm run watch
+```
+Puis dans le panneau **Run & Debug** (`Ctrl+Shift+D`), sélectionne **"Run Extension (watch)"** et clique ▶.
+Après chaque modification sauvegardée, recharge avec `Ctrl+Shift+F5` dans la fenêtre de test.
+
+**Option 3 — F5 classique**
+Dans le panneau Run & Debug, sélectionne **"Run Extension"** et clique ▶.
 
 ## Commandes
 
