@@ -11,6 +11,16 @@ Extension VSCode pour gérer les containers Docker directement depuis l'éditeur
 - **Refresh automatique** : Mise à jour toutes les 5 secondes
 - **Notifications** : Feedback visuel succès/erreur pour chaque action
 
+### Container Resources Monitor
+
+- **Stats inline** : CPU et RAM affichés directement dans la sidebar pour chaque container running
+- **Dashboard temps réel** : Panel WebView avec graphiques CPU et Memory (Chart.js) pour tous les containers
+- **Métriques collectées** : CPU %, RAM (usage/limite/%), Network I/O (RX/TX), Disk I/O (Read/Write)
+- **Icône warning** : Icône jaune automatique si CPU ou RAM dépasse 80%
+- **Alertes** : Notification si CPU > 80% pendant 30s ou RAM > 90% pendant 10s, avec bouton "View Monitor"
+- **Export** : Rapport des stats au format CSV ou JSON
+- **Toggle** : Activation/désactivation des stats inline via clic droit ou bouton toolbar
+
 ## Prérequis
 
 - VSCode 1.80+
@@ -30,13 +40,16 @@ Puis `F5` dans VSCode pour lancer en mode développement.
 
 | Commande | Description | Raccourci |
 |----------|-------------|-----------|
-| `Docker: Refresh Containers` | Rafraîchir la liste | `Cmd+Shift+D R` |
+| `Docker: Refresh Containers` | Rafraîchir la liste | `Ctrl+Shift+Alt+R` |
 | `Docker: Start Container` | Démarrer un container | - |
 | `Docker: Stop Container` | Arrêter un container | - |
 | `Docker: Restart Container` | Redémarrer un container | - |
 | `Docker: Remove Container` | Supprimer un container | - |
 | `Docker: View Logs` | Voir les logs en temps réel | - |
 | `Docker: Exec Bash` | Ouvrir un terminal dans le container | - |
+| `Docker: Show Resources Monitor` | Ouvrir le dashboard de métriques | `Ctrl+Shift+Alt+M` |
+| `Docker: Toggle Stats in TreeView` | Activer/désactiver les stats inline | clic droit |
+| `Docker: Export Stats Report` | Exporter les stats en CSV ou JSON | - |
 
 ## Packager en .vsix
 
@@ -49,4 +62,4 @@ npm run package
 - TypeScript
 - VSCode Extension API (TreeView, Webview, Terminal)
 - dockerode
-# Docker-Quick-Actions
+- Chart.js (dashboard métriques)
