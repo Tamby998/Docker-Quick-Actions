@@ -7,6 +7,9 @@ export function activate(context: vscode.ExtensionContext) {
         const { registerCommands } = require('./commands');
         const { StatsCollector } = require('./statsCollector');
         const { AlertManager } = require('./alertManager');
+        const { MultiLogsManager } = require('./multiLogsManager');
+        const { LogsExporter } = require('./logsExporter');
+        const { LogFilterEngine } = require('./logFilter');
 
         const dockerManager = new DockerManager();
         const treeProvider = new ContainerTreeProvider(dockerManager);
@@ -20,12 +23,17 @@ export function activate(context: vscode.ExtensionContext) {
         // Alert manager
         const alertManager = new AlertManager(statsCollector);
 
+        // Multi-logs
+        const multiLogsManager = new MultiLogsManager(dockerManager);
+        const logsExporter = new LogsExporter();
+        const filterEngine = new LogFilterEngine();
+
         const treeView = vscode.window.createTreeView('dockerContainers', {
             treeDataProvider: treeProvider,
             showCollapseAll: false
         });
 
-        registerCommands(context, dockerManager, treeProvider, statsCollector);
+        registerCommands(context, dockerManager, treeProvider, statsCollector, multiLogsManager, logsExporter, filterEngine);
 
         // Start stats collection if enabled
         const statsConfig = vscode.workspace.getConfiguration('dockerQuickActions.stats');
@@ -58,6 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push({ dispose: () => clearInterval(refreshInterval) });
         context.subscriptions.push({ dispose: () => statsCollector.dispose() });
         context.subscriptions.push({ dispose: () => alertManager.dispose() });
+        context.subscriptions.push({ dispose: () => multiLogsManager.dispose() });
 
         vscode.window.showInformationMessage('Docker Quick Actions activated!');
     } catch (error: any) {

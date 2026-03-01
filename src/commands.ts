@@ -5,12 +5,19 @@ import { LogsPanel } from './logsPanel';
 import { StatsCollector } from './statsCollector';
 import { StatsPanel } from './statsPanel';
 import { formatStatsForExport } from './statsFormatter';
+import { MultiLogsManager } from './multiLogsManager';
+import { MultiLogsPanel } from './multiLogsPanel';
+import { LogsExporter } from './logsExporter';
+import { LogFilterEngine } from './logFilter';
 
 export function registerCommands(
     context: vscode.ExtensionContext,
     dockerManager: DockerManager,
     treeProvider: ContainerTreeProvider,
-    statsCollector: StatsCollector
+    statsCollector: StatsCollector,
+    multiLogsManager: MultiLogsManager,
+    logsExporter: LogsExporter,
+    filterEngine: LogFilterEngine
 ): void {
     context.subscriptions.push(
         vscode.commands.registerCommand('docker-quick-actions.refreshContainers', () => {
@@ -128,6 +135,34 @@ export function registerCommands(
         vscode.commands.registerCommand('docker-quick-actions.toggleStatsInTreeView', () => {
             const enabled = treeProvider.toggleStats();
             vscode.window.showInformationMessage(`Stats in TreeView: ${enabled ? 'ON' : 'OFF'}`);
+        })
+    );
+
+    // Multi-logs commands
+    context.subscriptions.push(
+        vscode.commands.registerCommand('docker-quick-actions.openMultiLogs', () => {
+            MultiLogsPanel.show(multiLogsManager, logsExporter, filterEngine, context);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('docker-quick-actions.addToMultiLogs', async (item?: ContainerTreeItem) => {
+            const container = item?.container || await pickContainer(dockerManager, 'running');
+            if (!container) { return; }
+
+            MultiLogsPanel.show(multiLogsManager, logsExporter, filterEngine, context);
+            try {
+                await multiLogsManager.addContainer(container.id, container.name);
+            } catch (error: any) {
+                vscode.window.showErrorMessage(`Failed to add ${container.name} to logs viewer: ${error.message}`);
+            }
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('docker-quick-actions.clearMultiLogs', () => {
+            multiLogsManager.clearLogs();
+            vscode.window.showInformationMessage('All logs cleared.');
         })
     );
 

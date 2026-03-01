@@ -91,6 +91,24 @@
         "title": "Export Stats Report",
         "icon": "$(export)",
         "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.openMultiLogs",
+        "title": "Open Multi-Container Logs",
+        "icon": "$(list-unordered)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.addToMultiLogs",
+        "title": "Add to Logs Viewer",
+        "icon": "$(add)",
+        "category": "Docker"
+      },
+      {
+        "command": "docker-quick-actions.clearMultiLogs",
+        "title": "Clear All Logs",
+        "icon": "$(clear-all)",
+        "category": "Docker"
       }
     ],
     "menus": {
@@ -107,6 +125,11 @@
         },
         {
           "command": "docker-quick-actions.showResourcesMonitor",
+          "when": "view == dockerContainers",
+          "group": "navigation"
+        },
+        {
+          "command": "docker-quick-actions.openMultiLogs",
           "when": "view == dockerContainers",
           "group": "navigation"
         }
@@ -166,6 +189,21 @@
           "command": "docker-quick-actions.showResourcesMonitor",
           "when": "view == dockerContainers",
           "group": "4_stats"
+        },
+        {
+          "command": "docker-quick-actions.addToMultiLogs",
+          "when": "view == dockerContainers && viewItem == running",
+          "group": "5_multilogs@1"
+        },
+        {
+          "command": "docker-quick-actions.openMultiLogs",
+          "when": "view == dockerContainers",
+          "group": "5_multilogs@2"
+        },
+        {
+          "command": "docker-quick-actions.clearMultiLogs",
+          "when": "view == dockerContainers",
+          "group": "5_multilogs@3"
         }
       ]
     },
@@ -179,6 +217,11 @@
         "command": "docker-quick-actions.showResourcesMonitor",
         "key": "ctrl+shift+alt+m",
         "mac": "ctrl+shift+alt+m"
+      },
+      {
+        "command": "docker-quick-actions.openMultiLogs",
+        "key": "ctrl+shift+alt+l",
+        "mac": "ctrl+shift+alt+l"
       }
     ],
     "configuration": {
@@ -219,6 +262,31 @@
           "minimum": 10,
           "maximum": 100,
           "description": "Memory usage threshold (%) to trigger alerts"
+        },
+        "dockerQuickActions.logs.maxContainers": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Maximum number of containers in the Multi-Logs viewer"
+        },
+        "dockerQuickActions.logs.bufferSize": {
+          "type": "number",
+          "default": 10000,
+          "minimum": 1000,
+          "maximum": 100000,
+          "description": "Maximum log entries kept in memory per session"
+        },
+        "dockerQuickActions.logs.autoScroll": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto-scroll to latest log entries"
+        },
+        "dockerQuickActions.logs.timestampFormat": {
+          "type": "string",
+          "enum": ["absolute", "relative"],
+          "default": "absolute",
+          "description": "Timestamp display format in the logs viewer"
         }
       }
     }
